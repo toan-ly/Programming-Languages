@@ -22,9 +22,7 @@ class State(object):
         return State(variable_name, variable_value, variable_type, self)
 
     def get_value(self, variable_name) -> Any:
-        """
-        Retrives the value and type of a variable in the state.
-        """
+        """ TODO: Implement. """
         if variable_name == self.variable_name:
             return self.value
         return self.next_state.get_value(variable_name)
@@ -87,8 +85,7 @@ def evaluate(expression: Expr, state: State) -> Tuple[Optional[Any], Type, State
             current_state = state
             result_value, result_type = None, Unit()
             for expr in exprs:
-                result_value, result_type, current_state = evaluate(
-                    expr, current_state)
+                result_value, result_type, current_state = evaluate(expr, current_state)
             return (result_value, result_type, current_state)
 
         case Variable(variable_name=variable_name):
@@ -171,7 +168,7 @@ def evaluate(expression: Expr, state: State) -> Tuple[Optional[Any], Type, State
                     result = left_result * right_result
                 case _:
                     raise InterpTypeError(f"Cannot multiply {left_type}s")
-
+                    
             return (result, left_type, new_state)
 
         case Divide(left=left, right=right):
@@ -235,7 +232,7 @@ def evaluate(expression: Expr, state: State) -> Tuple[Optional[Any], Type, State
                 case _:
                     raise InterpTypeError(
                         "Cannot perform logical or on non-boolean operands.")
-
+            
             return (result, left_type, new_state)
 
         case Not(expr=expr):
@@ -250,7 +247,7 @@ def evaluate(expression: Expr, state: State) -> Tuple[Optional[Any], Type, State
                 case _:
                     raise InterpTypeError(
                         "Cannot perform logical not on non-boolean operand.")
-
+            
             return (result, value_type, new_state)
 
         case If(condition=condition, true=true, false=false):
@@ -299,7 +296,7 @@ def evaluate(expression: Expr, state: State) -> Tuple[Optional[Any], Type, State
                 raise InterpTypeError(f"""Mismatched types for Lte:
             Cannot compare {left_type} and {right_type}""")
 
-            # Perform less than or equal comparison
+            # Perform less than or equal comparison 
             match left_type:
                 case Integer() | Boolean() | String() | FloatingPoint():
                     result = left_value <= right_value
@@ -308,21 +305,18 @@ def evaluate(expression: Expr, state: State) -> Tuple[Optional[Any], Type, State
                 case _:
                     raise InterpTypeError(
                         f"Cannot perform <= on {left_type} type.")
-
+            
             return (result, Boolean(), new_state)
 
         case Gt(left=left, right=right):
             """ TODO: Implement. """
-            # Evaluate the left and right expressions
             left_value, left_type, new_state = evaluate(left, state)
             right_value, right_type, new_state = evaluate(right, new_state)
 
-            # Check for type mismatch
             if left_type != right_type:
                 raise InterpTypeError(f"""Mismatched types for Gt:
             Cannot compare {left_type} and {right_type}""")
 
-            # Perform greater than comparison based on the type
             match left_type:
                 case Integer() | Boolean() | String() | FloatingPoint():
                     result = left_value > right_value
@@ -331,21 +325,18 @@ def evaluate(expression: Expr, state: State) -> Tuple[Optional[Any], Type, State
                 case _:
                     raise InterpTypeError(
                         f"Cannot perform > on {left_type} type.")
-
+            
             return (result, Boolean(), new_state)
 
         case Gte(left=left, right=right):
             """ TODO: Implement. """
-            # Evaluate the left and right expressions
             left_value, left_type, new_state = evaluate(left, state)
             right_value, right_type, new_state = evaluate(right, new_state)
 
-            # Check for type mismatch
             if left_type != right_type:
                 raise InterpTypeError(f"""Mismatched types for Gte:
             Cannot compare {left_type} and {right_type}""")
-
-            # Perform greater than or equal comparison based on type
+            
             match left_type:
                 case Integer() | Boolean() | String() | FloatingPoint():
                     result = left_value >= right_value
@@ -359,16 +350,13 @@ def evaluate(expression: Expr, state: State) -> Tuple[Optional[Any], Type, State
 
         case Eq(left=left, right=right):
             """ TODO: Implement. """
-            # Evaluate the left and right expressions
             left_value, left_type, new_state = evaluate(left, state)
             right_value, right_type, new_state = evaluate(right, new_state)
 
-            # Check for type mismatch
             if left_type != right_type:
                 raise InterpTypeError(f"""Mismatched types for Eq:
             Cannot compare {left_type} and {right_type}""")
-
-            # Perform equality comparison based on the type
+            
             match left_type:
                 case Integer() | Boolean() | String() | FloatingPoint():
                     result = left_value == right_value
@@ -377,21 +365,18 @@ def evaluate(expression: Expr, state: State) -> Tuple[Optional[Any], Type, State
                 case _:
                     raise InterpTypeError(
                         f"Cannot perform == on {left_type} type.")
-
+            
             return (result, Boolean(), new_state)
 
         case Ne(left=left, right=right):
             """ TODO: Implement. """
-            # Evaluate the left and right expressions
             left_value, left_type, new_state = evaluate(left, state)
             right_value, right_type, new_state = evaluate(right, new_state)
 
-            # Check for type mismatch
             if left_type != right_type:
                 raise InterpTypeError(f"""Mismatched types for Ne:
             Cannot compare {left_type} and {right_type}""")
-
-            # Perform inequality comparison based on the type
+            
             match left_type:
                 case Integer() | Boolean() | String() | FloatingPoint():
                     result = left_value != right_value
@@ -400,21 +385,18 @@ def evaluate(expression: Expr, state: State) -> Tuple[Optional[Any], Type, State
                 case _:
                     raise InterpTypeError(
                         f"Cannot perform != on {left_type} type.")
-
+            
             return (result, Boolean(), new_state)
 
         case While(condition=condition, body=body):
             """ TODO: Implement. """
-            # Evaluate the condition
             value, value_type, new_state = evaluate(condition, state)
 
-            # Perform while loop based on the condition's type
             match value_type:
                 case Boolean():
                     while value:
                         _, _, new_state = evaluate(body, new_state)
-                        value, value_type, new_state = evaluate(
-                            condition, new_state)
+                        value, value_type, new_state = evaluate(condition, new_state)
                 case _:
                     raise InterpTypeError(
                         "Cannot perform while on non-boolean condition.")
