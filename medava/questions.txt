@@ -1,0 +1,8 @@
+1. What are some common cases where abstract classes are preferred over interfaces, and vice versa?
+2. Is the "@" or "annotations" in Java similar to "decorators" in Python?
+3. What are the best practices for handling exceptions when working with multiple exceptions in the "try-catch" block?
+4. Are Java's enum type and Python's Enum class different?
+5. What are some common mistakes to avoid when implementing interfaces and abstract classes in Java?
+6. When should I use Java to build a project? What kind of projects are best using Java?
+7. How to be able to imagine the whole flow of classes, which one uses others, which one inherits others, which one is related to which one?
+ 
